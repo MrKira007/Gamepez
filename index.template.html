@@ -6,7 +6,7 @@
   <title>Download ZIP via Short Link</title>
 </head>
 <body>
-  <h1>Download ZIP Files</h1>
+  <h1>Download ZIP File</h1>
   <label for="filename">Enter Game ID:</label>
   <input type="text" id="filename" placeholder="examplefile" />
   <button id="downloadBtn">Download</button>
@@ -16,6 +16,16 @@
   <script>
     const GITHUB_BASE = "__GITHUB_BASE_URL__";   // Injected at build time
     const CUTY_TOKEN = "__CUTY_API_TOKEN__";     // Injected at build time
+
+    // Function to generate a random alias (letters and numbers)
+    function generateRandomAlias(length = 8) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let alias = '';
+      for (let i = 0; i < length; i++) {
+        alias += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return alias;
+    }
 
     document.getElementById("downloadBtn").addEventListener("click", async () => {
       const filename = document.getElementById("filename").value.trim();
@@ -28,7 +38,7 @@
       }
 
       const fileUrl = `${GITHUB_BASE}${filename}.zip`;
-      const alias = filename + "-zip";
+      const alias = generateRandomAlias(); // Generate a random alias
 
       const apiUrl = `https://api.cuty.io/quick?token=${CUTY_TOKEN}&url=${encodeURIComponent(fileUrl)}&alias=${alias}&format=text`;
 
