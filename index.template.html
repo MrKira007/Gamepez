@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Download ZIP via Short Link</title>
+</head>
+<body>
+  <h1>Download ZIP Files</h1>
+  <label for="filename">Enter Game ID:</label>
+  <input type="text" id="filename" placeholder="examplefile" />
+  <button id="downloadBtn">Download</button>
+
+  <p id="status"></p>
+
+  <script>
+    const GITHUB_BASE = "__GITHUB_BASE_URL__";   // Injected at build time
+    const CUTY_TOKEN = "__CUTY_API_TOKEN__";     // Injected at build time
+
+    document.getElementById("downloadBtn").addEventListener("click", async () => {
+      const filename = document.getElementById("filename").value.trim();
+      const status = document.getElementById("status");
+      status.textContent = "";
+
+      if (!filename) {
+        alert("Please enter a file name.");
+        return;
+      }
+
+      const fileUrl = `${GITHUB_BASE}${filename}.zip`;
+      const alias = filename + "-zip";
+
+      const apiUrl = `https://api.cuty.io/quick?token=${CUTY_TOKEN}&url=${encodeURIComponent(fileUrl)}&alias=${alias}&format=text`;
+
+      status.textContent = "Generating short link...";
+
+      try {
+        const res = await fetch(apiUrl);
+        const shortUrl = await res.text();
+
+        if (shortUrl.startsWith("http")) {
+          status.innerHTML = `Redirecting to download... <br><a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+          window.location.href = shortUrl;
+        } else {
+          throw new Error(shortUrl);
+        }
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

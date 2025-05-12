@@ -1,0 +1,7 @@
+[build]
+  command = "node build.js"
+  publish = "./"
+
+[build.environment]
+  GITHUB_BASE_URL = "https://github.com/MrKira007/Gamepez/raw/refs/heads/master/"
+  CUTY_API_TOKEN = "40ad904bef62117cb8b1e1cea"
